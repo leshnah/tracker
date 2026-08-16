@@ -67,7 +67,14 @@ main{padding-top:10px}
 .exbadge.m{background:rgba(242,165,65,.18);color:var(--accent);border:1px solid rgba(242,165,65,.4)}
 .exbadge.a{background:var(--panel);color:var(--muted);border:1px solid var(--line)}
 .exbadge.c{background:rgba(76,194,255,.14);color:var(--accent2);border:1px solid rgba(76,194,255,.35)}
-.lift .tgt{font-size:12px;color:var(--muted);margin:2px 0 10px}
+.lift .tgt{font-size:12px;color:var(--muted);margin:2px 0 8px}
+.lasttime{font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);
+  border-radius:9px;padding:7px 10px;margin:0 0 10px;line-height:1.45}
+.lasttime b{color:var(--ink)}
+.lasttime .rec{font-weight:800}
+.lasttime.add .rec,.lasttime.ladder .rec{color:var(--good)}
+.lasttime.climb .rec{color:var(--accent)}
+.lasttime.info .rec{color:var(--accent2)}
 .tgt b{color:var(--ink)}
 .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:8px}
 .fld{display:flex;flex-direction:column;gap:3px}
@@ -203,6 +210,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 12px}
   <div class="help">
     <h2>How the sheet reads your session</h2>
     <p>Each day now lists all <b>6 exercises</b>. The two <b style="color:var(--accent)">MAIN</b> lifts (orange bar) drive the week-by-week plan — their rep target changes every block (that's the periodization). The <b>ACC</b> accessories run simple double progression in their own, higher rep range, and <b>CORE</b> moves you just progress by adding time or reps. Every exercise gets its own verdict.</p>
+    <p style="margin-top:8px">From Week 2 on, each card also shows a <b>“Last time”</b> line — your most recent working entry for that exact exercise (deload/test weeks skipped) and the recommendation it earned — so the newest iteration tells you exactly where to start.</p>
   </div>
 
   <div class="help">
@@ -379,7 +387,10 @@ function buildWeek(p){
     dh.querySelector('[data-role="stat"]').innerHTML=dayStatText(p.wk,di);
     day.ex.forEach((ex,li)=> body.appendChild(buildLift(p.wk,di,li,ex)));
   });
-  card.querySelector(".week-head").addEventListener("click",()=>card.classList.toggle("open"));
+  card.querySelector(".week-head").addEventListener("click",()=>{
+    card.classList.toggle("open");
+    if(card.classList.contains("open")) card.querySelectorAll(".lift").forEach(refreshLastTime);
+  });
   return card;
 }
 
@@ -406,6 +417,7 @@ function buildLift(wk,di,li,ex){
   box.innerHTML=`
     <div class="name">${ex.n}${badge}</div>
     <div class="tgt">${tgt}</div>
+    <div class="lasttime" data-role="lasttime" style="display:none"></div>
     <div class="fields">${weightField}${setInputs}
       <div class="fld"><label>RPE</label><input inputmode="decimal" data-f="rpe" value="${c.rpe??""}"></div></div>
     ${chipsBlock}
@@ -434,6 +446,7 @@ function buildLift(wk,di,li,ex){
     c.max=!c.max; mb.classList.toggle("on",c.max); mb.textContent=c.max?"YES":"no";
     refreshVerdict(box,sc,c); save();
   });
+  refreshLastTime(box);
   const fx=box.querySelector('[data-role="finishex"]');
   if(STATE.done[k]){ box.classList.add("done"); fx.textContent="Finished ✓ — tap to undo"; fx.classList.add("done"); }
   fx.addEventListener("click",()=>toggleExercise(wk,di,li,DAYS[di].name,DAYS[di].ex.length,fx,box));
@@ -447,6 +460,34 @@ function updateConv(box,c){
 }
 function updateChips(box,c){ box.querySelectorAll(".chip").forEach(ch=>ch.classList.toggle("on",String(c.w)===String(ch.dataset.w))); }
 function refreshVerdict(box,sc,c){ const v=verdict(sc,c); const el=box.querySelector(".verdict"); el.className="verdict "+v.cls; el.textContent=v.txt; }
+// Most recent EARLIER week this same exercise was logged (skipping deload/test weeks).
+function findPrev(wk,di,li){
+  const ex=DAYS[di].ex[li];
+  for(let w=wk-1; w>=1; w--){
+    const c=STATE.cells[cellKey(w,di,li)];
+    if(c && c.s.some(x=>x!==""&&x!=null)){
+      const fl=scheme(ex,w).flag;
+      if(fl==="Deload"||fl==="Test") continue;
+      return {w:w, c:c};
+    }
+  }
+  return null;
+}
+function refreshLastTime(box){
+  const el=box.querySelector('[data-role="lasttime"]'); if(!el) return;
+  const p=(box.dataset.k||"").split("|"); const wk=+p[0], di=+p[1], li=+p[2];
+  if(isNaN(wk)) { el.style.display="none"; return; }
+  const ex=DAYS[di].ex[li];
+  const prev=findPrev(wk,di,li);
+  if(!prev){ el.style.display="none"; el.innerHTML=""; return; }
+  const reps=prev.c.s.filter(x=>x!==""&&x!=null).join(", ");
+  const wtxt=(prev.c.w!==""&&prev.c.w!=null)?(prev.c.w+" lb"):"bodyweight / band";
+  const rpe=(prev.c.rpe!==""&&prev.c.rpe!=null)?(" @ RPE "+prev.c.rpe):"";
+  const v=verdict(scheme(ex,prev.w), prev.c);
+  el.className="lasttime "+(v.cls||"");
+  el.style.display="block";
+  el.innerHTML='Last time (Wk '+prev.w+'): <b>'+wtxt+'</b> × '+(reps||"—")+rpe+'<br>→ <span class="rec">'+v.txt+'</span>';
+}
 
 function countLogged(wk){
   let n=0;
