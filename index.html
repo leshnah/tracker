@@ -23,7 +23,7 @@ body.light{
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);
   font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;padding-bottom:98px}
+  -webkit-font-smoothing:antialiased;padding-bottom:40px}
 .wrap{max-width:900px;margin:0 auto;padding:0 12px}
 header{position:sticky;top:0;z-index:50;background:var(--bg);
   border-bottom:1px solid var(--line);padding:10px 12px}
@@ -62,7 +62,11 @@ main{padding-top:10px}
 .day{margin:16px 0 4px;font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--accent2)}
 .lift{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0}
 .lift.main{border-left:3px solid var(--accent)}
+.namerow{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .lift .name{font-weight:700;font-size:15px}
+.restbtn{flex:0 0 auto;background:var(--panel);border:1px solid var(--accent2);color:var(--accent2);
+  border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+.restbtn:active{transform:scale(.95)}
 .exbadge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;margin-left:8px;vertical-align:2px;letter-spacing:.05em}
 .exbadge.m{background:rgba(242,165,65,.18);color:var(--accent);border:1px solid rgba(242,165,65,.4)}
 .exbadge.a{background:var(--panel);color:var(--muted);border:1px solid var(--line)}
@@ -76,7 +80,7 @@ main{padding-top:10px}
 .lasttime.climb .rec{color:var(--accent)}
 .lasttime.info .rec{color:var(--accent2)}
 .tgt b{color:var(--ink)}
-.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:8px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(56px,1fr));gap:8px}
 .fld{display:flex;flex-direction:column;gap:3px}
 .fld label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;text-align:center}
 .fld input{background:var(--inbg);color:var(--inink);border:1px solid var(--line);border-radius:9px;
@@ -127,28 +131,18 @@ main{padding-top:10px}
 .lift.done .name::after{content:" ✓";color:var(--good);font-weight:800}
 .sxdel{background:transparent;border:1px solid var(--line);color:var(--warn);border-radius:6px;
   padding:2px 8px;font-weight:800;cursor:pointer;font-family:inherit}
-#toast{position:fixed;left:50%;bottom:112px;transform:translateX(-50%) translateY(20px);
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
   background:var(--good);color:#06210f;font-weight:800;font-size:13px;padding:10px 16px;border-radius:10px;
   opacity:0;pointer-events:none;transition:all .25s;z-index:80;box-shadow:0 6px 20px rgba(0,0,0,.3)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .hidden-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 12px}
-.timerbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--panel);
-  border-top:1px solid var(--line);padding:8px 10px;display:flex;align-items:center;
-  gap:7px;justify-content:center;flex-wrap:wrap;box-shadow:0 -4px 16px rgba(0,0,0,.25)}
-.timerbar.flash{animation:tflash .5s ease 6}
-@keyframes tflash{0%,100%{background:var(--panel)}50%{background:var(--good)}}
-.tlabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
-.tdisplay{font-variant-numeric:tabular-nums;font-weight:800;font-size:23px;min-width:66px;
-  text-align:center;color:var(--ink);letter-spacing:.02em}
-.tdisplay.warn{color:var(--accent)} .tdisplay.run{color:var(--good)}
-.tbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:9px;
-  padding:9px 11px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
-.tbtn:active{transform:scale(.94)}
-.tbtn.preset.on{background:var(--accent2);color:#062033;border-color:var(--accent2)}
-.tbtn.mainb{background:var(--accent);color:#111;border-color:var(--accent);min-width:44px}
-@media print{.timerbar{display:none}
-  header{position:static} .tools,.legend,.chev,.btn,select.week{display:none}
+@keyframes tflash{0%,100%{background:var(--panel);color:var(--accent2)}50%{background:var(--good);color:#06210f}}
+.restbtn.run{background:var(--accent2);color:#062033;border-color:var(--accent2);min-width:62px;text-align:center}
+.restbtn.warn{background:var(--accent);color:#111;border-color:var(--accent);min-width:62px;text-align:center}
+.restbtn.flash{animation:tflash .5s ease 6}
+@media print{
+  header{position:static} .tools,.legend,.chev,.btn,select.week,.restbtn{display:none}
   .week-body{display:block!important} body{background:#fff;color:#000}
 }
 </style>
@@ -211,6 +205,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 12px}
     <h2>How the sheet reads your session</h2>
     <p>Each day now lists all <b>6 exercises</b>. The two <b style="color:var(--accent)">MAIN</b> lifts (orange bar) drive the week-by-week plan — their rep target changes every block (that's the periodization). The <b>ACC</b> accessories run simple double progression in their own, higher rep range, and <b>CORE</b> moves you just progress by adding time or reps. Every exercise gets its own verdict.</p>
     <p style="margin-top:8px">From Week 2 on, each card also shows a <b>“Last time”</b> line — your most recent working entry for that exact exercise (deload/test weeks skipped) and the recommendation it earned — so the newest iteration tells you exactly where to start.</p>
+    <p style="margin-top:8px"><b>Per-set flow:</b> right after a set, tap the exercise's <b style="color:var(--accent2)">⏱</b> button — it starts your rest counting down on the button (2:30 mains · 1:30 accessories · 1:00 core) and jumps the cursor to the next set box, so you just type that set's reps. Tap it again after the next set — one tap per set.</p>
   </div>
 
   <div class="help">
@@ -229,17 +224,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 12px}
     <p style="margin-top:8px">Once a week tap <b>⬇︎ Backup</b> to save a small file to your Files app. If anything ever resets, tap <b>⬆︎ Restore</b> and pick it. That backup also moves your log to a new device.</p>
   </div>
 </main>
-
-<div class="timerbar" id="timerBar">
-  <span class="tlabel">Rest</span>
-  <span class="tdisplay" id="tDisp">1:30</span>
-  <button class="tbtn preset" data-sec="60">1:00</button>
-  <button class="tbtn preset" data-sec="90">1:30</button>
-  <button class="tbtn preset" data-sec="120">2:00</button>
-  <button class="tbtn preset" data-sec="180">3:00</button>
-  <button class="tbtn mainb" id="tToggle" aria-label="start/pause">▶</button>
-  <button class="tbtn" id="tReset" aria-label="reset">↺</button>
-</div>
 
 <footer>Intermediate · dumbbells + bands + bench + pull-up bar · 4–5 days/wk · back-friendly · beats the dumbbell cap. Educational programming, not medical advice.</footer>
 
@@ -400,6 +384,9 @@ function buildLift(wk,di,li,ex){
   const box=document.createElement("div");
   box.className="lift"+(ex.main?" main":""); box.dataset.k=k; box.dataset.wk=wk;
 
+  const rsec=ex.main?150:(ex.core?60:90);
+  const restLbl=Math.floor(rsec/60)+":"+String(rsec%60).padStart(2,"0");
+
   const badge = ex.main?'<span class="exbadge m">MAIN</span>' : (ex.core?'<span class="exbadge c">CORE</span>':'<span class="exbadge a">ACC</span>');
   const setInputs=[0,1,2,3,4].map(i=>
     `<div class="fld"><label>${ex.core?'Set':'Set '+(i+1)}</label>
@@ -415,7 +402,7 @@ function buildLift(wk,di,li,ex){
                       : `Target: <b>${sc.sets? sc.sets+" × "+sc.range : "test / light"}</b> · RPE ${sc.rpe||"—"}`;
 
   box.innerHTML=`
-    <div class="name">${ex.n}${badge}</div>
+    <div class="namerow"><div class="name">${ex.n}${badge}</div><button class="restbtn" data-role="rest" data-sec="${rsec}">⏱ ${restLbl}</button></div>
     <div class="tgt">${tgt}</div>
     <div class="lasttime" data-role="lasttime" style="display:none"></div>
     <div class="fields">${weightField}${setInputs}
@@ -446,6 +433,11 @@ function buildLift(wk,di,li,ex){
     c.max=!c.max; mb.classList.toggle("on",c.max); mb.textContent=c.max?"YES":"no";
     refreshVerdict(box,sc,c); save();
   });
+  const rb=box.querySelector('[data-role="rest"]'), setCount=(sc.sets>0?sc.sets:5);
+  if(rb) rb.addEventListener("click",()=>{ try{ startRest(rb);
+    const ins=box.querySelectorAll('input[data-f^="s"]');
+    for(let i=0;i<setCount && i<ins.length;i++){ if(!ins[i].value){ ins[i].focus(); break; } }
+  }catch(e){} });
   refreshLastTime(box);
   const fx=box.querySelector('[data-role="finishex"]');
   if(STATE.done[k]){ box.classList.add("done"); fx.textContent="Finished ✓ — tap to undo"; fx.classList.add("done"); }
@@ -630,7 +622,7 @@ function renderSessionLog(){
   tb.innerHTML = list.length ? list.map(s=>{
     const idx=STATE.sessions.indexOf(s);
     return `<tr><td>${new Date(s.fin).toLocaleDateString()}</td><td>Wk ${s.week} · ${dayLabel(s.day)}</td><td>${hhmm(s.start)}–${hhmm(s.fin)}</td><td>${s.dur} min</td><td><button class="sxdel" data-i="${idx}">✕</button></td></tr>`;
-  }).join("") : `<tr><td colspan="5" style="color:var(--muted)">No sessions yet — tap “Finish session ✓” under a day when you're done.</td></tr>`;
+  }).join("") : `<tr><td colspan="5" style="color:var(--muted)">No sessions yet — tap “Finish exercise ✓” through a day's exercises; finishing the last one logs it.</td></tr>`;
   tb.querySelectorAll(".sxdel").forEach(btn=>btn.addEventListener("click",()=>{
     STATE.sessions.splice(+btn.dataset.i,1); save(); renderSessionLog();
     PROGRAM.forEach(p=>DAYS.forEach((d,di)=>updateDayStat(p.wk,di)));
@@ -649,26 +641,33 @@ let toastTimer=null;
 function toast(msg){ let t=document.getElementById("toast"); if(!t){ t=document.createElement("div"); t.id="toast"; document.body.appendChild(t); }
   t.textContent=msg; t.className="show"; clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.className="",2600); }
 
-// ---------- rest timer ----------
-let tDur=90, tRemain=90, tEndAt=null, tRunning=false, tRAF=null, audioCtx=null, wakeLock=null;
-function tfmt(s){ s=Math.max(0,Math.ceil(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
-function tRender(){ const d=document.getElementById("tDisp"); d.textContent=tfmt(tRemain);
-  d.className="tdisplay"+(tRunning?(tRemain<=10?" warn":" run"):""); }
-function setToggle(){ document.getElementById("tToggle").textContent=tRunning?"⏸":"▶"; }
-function tick(){ if(!tRunning) return; tRemain=(tEndAt-Date.now())/1000;
-  if(tRemain<=0){ tRemain=0; tRender(); timerDone(); return; } tRender(); tRAF=requestAnimationFrame(tick); }
-function startTimer(sec){ tDur=sec; tRemain=sec; tEndAt=Date.now()+sec*1000; tRunning=true;
-  unlockAudio(); reqWake(); setToggle(); highlightPreset(sec); cancelAnimationFrame(tRAF); tick(); }
-function pauseResume(){
-  if(tRunning){ tRunning=false; cancelAnimationFrame(tRAF); relWake(); }
-  else { if(tRemain<=0) tRemain=tDur; tEndAt=Date.now()+tRemain*1000; tRunning=true; unlockAudio(); reqWake(); tick(); }
-  setToggle(); tRender();
+// ---------- rest timer (counts down on the exercise's own ⏱ button) ----------
+let restBtn=null, restBase=90, restEnd=0, restRAF=null, audioCtx=null, wakeLock=null;
+function fmtSec(s){ s=Math.max(0,Math.ceil(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+function resetRestBtn(btn){ if(!btn) return; const sec=+btn.dataset.sec||90; btn.textContent="⏱ "+fmtSec(sec); btn.classList.remove("run","warn","flash"); }
+function stopRest(){ if(restRAF){ cancelAnimationFrame(restRAF); restRAF=null; } relWake(); if(restBtn) resetRestBtn(restBtn); restBtn=null; }
+function startRest(btn){
+  if(restBtn && restBtn!==btn) resetRestBtn(restBtn);    // one timer at a time
+  if(restRAF){ cancelAnimationFrame(restRAF); restRAF=null; }
+  restBtn=btn; restBase=+btn.dataset.sec||90; restEnd=Date.now()+restBase*1000;  // every tap restarts a fresh rest
+  unlockAudio(); reqWake(); tickRest();
 }
-function resetTimer(){ tRunning=false; cancelAnimationFrame(tRAF); relWake(); tRemain=tDur; setToggle(); tRender(); }
-function highlightPreset(sec){ document.querySelectorAll(".tbtn.preset").forEach(b=>b.classList.toggle("on",+b.dataset.sec===sec)); }
-function timerDone(){ tRunning=false; cancelAnimationFrame(tRAF); relWake(); setToggle(); beep(); flashBar();
-  try{ if(navigator.vibrate) navigator.vibrate([200,120,200]); }catch(e){} }
-function flashBar(){ const bar=document.getElementById("timerBar"); bar.classList.add("flash"); setTimeout(()=>bar.classList.remove("flash"),3000); }
+function tickRest(){
+  if(!restBtn) return;
+  const rem=(restEnd-Date.now())/1000;
+  if(rem<=0){ restBtn.textContent="⏱ 0:00"; restDone(); return; }
+  restBtn.textContent="⏱ "+fmtSec(rem);
+  restBtn.classList.toggle("warn",rem<=10);
+  restBtn.classList.toggle("run",rem>10);
+  restRAF=requestAnimationFrame(tickRest);
+}
+function restDone(){
+  const btn=restBtn;
+  if(restRAF){ cancelAnimationFrame(restRAF); restRAF=null; } relWake();
+  beep(); try{ if(navigator.vibrate) navigator.vibrate([200,120,200]); }catch(e){}
+  if(btn){ btn.classList.remove("run","warn"); btn.classList.add("flash"); setTimeout(()=>resetRestBtn(btn),2600); }
+  restBtn=null;
+}
 function unlockAudio(){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
   if(audioCtx.state==="suspended") audioCtx.resume(); }catch(e){} }
 function beep(){ try{ if(!audioCtx) return; const t0=audioCtx.currentTime;
@@ -678,11 +677,7 @@ function beep(){ try{ if(!audioCtx) return; const t0=audioCtx.currentTime;
     g.gain.exponentialRampToValueAtTime(0.0001,t0+off+0.24); o.start(t0+off); o.stop(t0+off+0.26); }); }catch(e){} }
 async function reqWake(){ try{ if("wakeLock" in navigator){ wakeLock=await navigator.wakeLock.request("screen"); } }catch(e){} }
 function relWake(){ try{ if(wakeLock){ wakeLock.release(); wakeLock=null; } }catch(e){} }
-document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && tRunning) reqWake(); });
-document.querySelectorAll(".tbtn.preset").forEach(b=>b.addEventListener("click",()=>startTimer(+b.dataset.sec)));
-document.getElementById("tToggle").addEventListener("click",pauseResume);
-document.getElementById("tReset").addEventListener("click",resetTimer);
-tRender();
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && restBtn) reqWake(); });
 
 try{ render(); }
 catch(err){
