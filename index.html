@@ -64,9 +64,10 @@ main{padding-top:10px}
 .lift.main{border-left:3px solid var(--accent)}
 .namerow{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .lift .name{font-weight:700;font-size:15px}
-.restbtn{flex:0 0 auto;background:var(--panel);border:1px solid var(--accent2);color:var(--accent2);
-  border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+.restbtn{width:100%;background:var(--panel);border:1px solid var(--accent2);color:var(--accent2);
+  border-radius:9px;padding:11px 2px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
 .restbtn:active{transform:scale(.95)}
+.fld input.cue{outline:2px solid var(--accent2);box-shadow:0 0 0 3px rgba(76,194,255,.30)}
 .exbadge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;margin-left:8px;vertical-align:2px;letter-spacing:.05em}
 .exbadge.m{background:rgba(242,165,65,.18);color:var(--accent);border:1px solid rgba(242,165,65,.4)}
 .exbadge.a{background:var(--panel);color:var(--muted);border:1px solid var(--line)}
@@ -205,12 +206,12 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 12px}
     <h2>How the sheet reads your session</h2>
     <p>Each day now lists all <b>6 exercises</b>. The two <b style="color:var(--accent)">MAIN</b> lifts (orange bar) drive the week-by-week plan — their rep target changes every block (that's the periodization). The <b>ACC</b> accessories run simple double progression in their own, higher rep range, and <b>CORE</b> moves you just progress by adding time or reps. Every exercise gets its own verdict.</p>
     <p style="margin-top:8px">From Week 2 on, each card also shows a <b>“Last time”</b> line — your most recent working entry for that exact exercise (deload/test weeks skipped) and the recommendation it earned — so the newest iteration tells you exactly where to start.</p>
-    <p style="margin-top:8px"><b>Per-set flow:</b> right after a set, tap the exercise's <b style="color:var(--accent2)">⏱</b> button — it starts your rest counting down on the button (2:30 mains · 1:30 accessories · 1:00 core) and jumps the cursor to the next set box, so you just type that set's reps. Tap it again after the next set — one tap per set.</p>
+    <p style="margin-top:8px"><b>Per-set flow:</b> the <b style="color:var(--accent2)">⏱</b> button sits in the set row. After each set, tap it — it starts your rest counting down on the button (2:30 mains · 1:30 accessories · 1:00 core) and jumps the cursor to the next set box, highlighting it, so you just type that set's reps. Once all <b>3 sets</b> are entered, the exercise logs itself as <b>finished</b> automatically.</p>
   </div>
 
   <div class="help">
-    <h2>Weights &amp; your dumbbells</h2>
-    <p>Enter weight in <b>pounds, per dumbbell</b> — the kg equivalent shows underneath automatically. The quick buttons match your plates: <b>22 · 33 · 44 · 55 lb</b>. Because your jumps are a big +11 lb, each <b>✅ ADD LOAD</b> sends you to the next plate; once you're at <b>55 lb</b> the app switches you to the <b>overload ladder</b> automatically (tempo → pause → extra set → less rest).</p>
+    <h2>Weights</h2>
+    <p>Type the weight you used in the <b>Weight lb</b> box — the kg equivalent shows underneath automatically. When you hit the top of the rep range on all 3 sets, the verdict tells you to <b>add load</b>; once you can't add weight, it switches you to the <b>overload ladder</b> (slower tempo → a pause → less rest) so you keep progressing.</p>
   </div>
 
   <div class="help">
@@ -242,15 +243,15 @@ const lb2kg=lb=>(Number(lb)*0.453592).toFixed(1);
 const PROGRAM=[
  {wk:1, phase:"Accumulation",  range:"8–10", top:10, sets:3, rpe:7, flag:"", action:"Establish baselines: a weight you could do ~12 but stop at 10 (3 in reserve). Log everything."},
  {wk:2, phase:"Accumulation",  range:"8–10", top:10, sets:3, rpe:8, flag:"", action:"Same weights, add 1 rep per set. Hit 10 on all sets → add load next week."},
- {wk:3, phase:"Accumulation",  range:"8–10", top:10, sets:4, rpe:8, flag:"", action:"Add a 4th set. Any lift at 10 on all sets → add load and reset to 8."},
+ {wk:3, phase:"Accumulation",  range:"8–10", top:10, sets:3, rpe:8, flag:"", action:"Push all 3 sets to 10 reps → then add load and reset to 8."},
  {wk:4, phase:"Deload",        range:"~8",   top:99, sets:2, rpe:6, flag:"Deload", action:"Deload: 2 sets, ~15% lighter, crisp and easy. No progression."},
  {wk:5, phase:"Intensification",range:"6–8", top:8,  sets:4, rpe:8, flag:"", action:"Tempo 3-0-1 (3s down). ~1 plate over Block-1 top; if capped, tempo makes 6–8 hard."},
  {wk:6, phase:"Intensification",range:"5–7", top:7,  sets:4, rpe:8, flag:"", action:"Tempo 3-1-1: add a 1-second pause at the stretch. Add a rep/load where wk5 hit top."},
- {wk:7, phase:"Intensification",range:"5–6", top:6,  sets:5, rpe:9, flag:"", action:"Add a 5th set (or +load). Peak strength — always leave 1 in reserve."},
+ {wk:7, phase:"Intensification",range:"5–6", top:6,  sets:3, rpe:9, flag:"", action:"Add load or slower tempo. Peak strength — always leave 1 in reserve."},
  {wk:8, phase:"Deload",        range:"~5",   top:99, sets:2, rpe:6, flag:"Deload", action:"Deload: 2 sets, ~15% lighter, normal tempo. Recover for the peak block."},
  {wk:9, phase:"Peak",          range:"8–12", top:12, sets:4, rpe:9, flag:"", action:"Heaviest 8–12 you now own — these beat your Week-1 numbers. Push to RPE 9."},
  {wk:10,phase:"Peak",          range:"8–12", top:12, sets:4, rpe:9, flag:"", action:"Add one myo-rep or drop set on the LAST compound of each session."},
- {wk:11,phase:"Peak",          range:"8–12", top:12, sets:5, rpe:10,flag:"", action:"Add a set + cut rest 20s (density). Final set of each main to true failure."},
+ {wk:11,phase:"Peak",          range:"8–12", top:12, sets:3, rpe:10,flag:"", action:"Cut rest 20s for density. Final set of each main to true failure."},
  {wk:12,phase:"Test",          range:"test", top:0,  sets:0, rpe:0, flag:"Test", action:"Retest: max reps at your Week-1 weight on 2 benchmarks. Then light work + restart heavier."},
 ];
 
@@ -258,8 +259,8 @@ const PROGRAM=[
 const DAYS=[
  {name:"Day 1 · Lower A — Squat / Quads", ex:[
    {n:"Goblet / Front Squat", main:true},
-   {n:"Bulgarian Split Squat", main:true},
-   {n:"DB Reverse Lunge / Step-up", b:[[10,12,3],[8,8,3],[10,15,3]]},
+   {n:"DB Step-up (onto bench)", main:true},
+   {n:"DB Reverse Lunge", b:[[10,12,3],[8,8,3],[10,15,3]]},
    {n:"Band Leg Extension / Sissy Squat", b:[[12,15,3],[10,12,3],[15,20,3]]},
    {n:"Standing DB Calf Raise", b:[[12,15,3],[10,12,4],[15,20,4]]},
    {n:"Dead Bug / Plank", core:true},
@@ -275,7 +276,7 @@ const DAYS=[
  {name:"Day 3 · Lower B — Hinge / Posterior", ex:[
    {n:"DB Hip Thrust", main:true},
    {n:"DB Romanian Deadlift", main:true},
-   {n:"B-Stance / Single-Leg RDL", b:[[8,10,3],[6,8,3],[10,12,3]]},
+   {n:"Single-Leg Hip Thrust", b:[[8,10,3],[6,8,3],[10,12,3]]},
    {n:"Band / Slider Leg Curl", b:[[12,15,3],[10,12,3],[15,20,3]]},
    {n:"Seated DB Calf Raise", b:[[15,20,3],[12,15,4],[20,20,4]]},
    {n:"Pallof Press / Bird Dog", core:true},
@@ -291,7 +292,7 @@ const DAYS=[
 ];
 const TOTAL_EX = DAYS.reduce((a,d)=>a+d.ex.length,0);
 
-const BENCH=[{lift:"Flat DB Bench Press"},{lift:"Bulgarian Split Squat"},{lift:"Pull-Up (weighted)"},{lift:""}];
+const BENCH=[{lift:"Flat DB Bench Press"},{lift:"DB Step-up (onto bench)"},{lift:"Pull-Up (weighted)"},{lift:""}];
 
 // ---- block detection for accessories ----
 function blockInfo(wk){
@@ -307,13 +308,13 @@ function scheme(ex,wk){
   const rpe=PROGRAM[wk-1].rpe;
   if(ex.main){
     const p=PROGRAM[wk-1];
-    return {main:true,core:false,top:p.top,sets:p.sets,range:p.range,rpe:p.rpe,flag:p.flag};
+    return {main:true,core:false,top:p.top,sets:Math.min(p.sets,3),range:p.range,rpe:p.rpe,flag:p.flag};
   }
   const bi=blockInfo(wk);
   if(ex.core) return {main:false,core:true,top:0,sets:3,range:"quality / time",rpe:"—",flag:bi.flag};
   const r=ex.b[bi.block];
   const rng = r[0]===r[1] ? String(r[1]) : r[0]+"–"+r[1];
-  return {main:false,core:false,top:r[1],sets:r[2],range:rng,rpe:rpe,flag:bi.flag};
+  return {main:false,core:false,top:r[1],sets:Math.min(r[2],3),range:rng,rpe:rpe,flag:bi.flag};
 }
 
 // ---- state ----
@@ -388,7 +389,7 @@ function buildLift(wk,di,li,ex){
   const restLbl=Math.floor(rsec/60)+":"+String(rsec%60).padStart(2,"0");
 
   const badge = ex.main?'<span class="exbadge m">MAIN</span>' : (ex.core?'<span class="exbadge c">CORE</span>':'<span class="exbadge a">ACC</span>');
-  const setInputs=[0,1,2,3,4].map(i=>
+  const setInputs=[0,1,2].map(i=>
     `<div class="fld"><label>${ex.core?'Set':'Set '+(i+1)}</label>
       <input inputmode="numeric" data-f="s${i}" value="${c.s[i]??""}" ${(sc.sets>0&&i>=sc.sets)?'style="opacity:.5"':''}></div>`).join("");
 
@@ -396,17 +397,17 @@ function buildLift(wk,di,li,ex){
     `<div class="fld"><label>Weight lb</label><input inputmode="decimal" data-f="w" value="${c.w??""}"></div>
      <div class="fld"><label>DB max?</label><div class="maxbtn ${c.max?'on':''}" data-f="max">${c.max?'YES':'no'}</div></div>`;
   const chipsBlock = ex.core ? "" :
-    `<div class="wconv"><span class="chips">${LEVELS.map(v=>`<button class="chip ${String(c.w)===String(v)?'on':''}" data-w="${v}">${v} lb</button>`).join("")}</span><span class="cvt" data-role="cvt"></span></div>`;
+    `<div class="wconv"><span class="cvt" data-role="cvt"></span></div>`;
 
   const tgt = ex.core ? `Core · ${sc.sets} sets — add time or reps`
                       : `Target: <b>${sc.sets? sc.sets+" × "+sc.range : "test / light"}</b> · RPE ${sc.rpe||"—"}`;
 
   box.innerHTML=`
-    <div class="namerow"><div class="name">${ex.n}${badge}</div><button class="restbtn" data-role="rest" data-sec="${rsec}">⏱ ${restLbl}</button></div>
+    <div class="name">${ex.n}${badge}</div>
     <div class="tgt">${tgt}</div>
     <div class="lasttime" data-role="lasttime" style="display:none"></div>
     <div class="fields">${weightField}${setInputs}
-      <div class="fld"><label>RPE</label><input inputmode="decimal" data-f="rpe" value="${c.rpe??""}"></div></div>
+      <div class="fld"><label>Rest</label><button class="restbtn" data-role="rest" data-sec="${rsec}">⏱ ${restLbl}</button></div></div>
     ${chipsBlock}
     <div class="noterow"><input placeholder="Notes (tempo, pause, ladder rung, per-side…)" data-f="note" value="${(c.note||'').replace(/"/g,'&quot;')}"></div>
     <div class="verdict"></div>
@@ -419,6 +420,7 @@ function buildLift(wk,di,li,ex){
       if(f==="w"){ updateConv(box,c); updateChips(box,c); }
       if(f.startsWith("s") && inp.value!==""){ const sk=startKey(wk,di); if(!STATE.starts[sk]){ STATE.starts[sk]=Date.now(); updateDayStat(wk,di); } }
       refreshVerdict(box,sc,c); updateWeekMeta(wk); save();
+      if(f.startsWith("s")) maybeAutoFinish(wk,di,li,box,sc.sets);
     });
   });
   box.querySelectorAll(".chip").forEach(ch=>{
@@ -433,11 +435,8 @@ function buildLift(wk,di,li,ex){
     c.max=!c.max; mb.classList.toggle("on",c.max); mb.textContent=c.max?"YES":"no";
     refreshVerdict(box,sc,c); save();
   });
-  const rb=box.querySelector('[data-role="rest"]'), setCount=(sc.sets>0?sc.sets:5);
-  if(rb) rb.addEventListener("click",()=>{ try{ startRest(rb);
-    const ins=box.querySelectorAll('input[data-f^="s"]');
-    for(let i=0;i<setCount && i<ins.length;i++){ if(!ins[i].value){ ins[i].focus(); break; } }
-  }catch(e){} });
+  const rb=box.querySelector('[data-role="rest"]');
+  if(rb) rb.addEventListener("click",()=>{ try{ startRest(rb); const i=firstEmptySet(box,sc.sets); if(i>=0) focusSet(box,i); }catch(e){} });
   refreshLastTime(box);
   const fx=box.querySelector('[data-role="finishex"]');
   if(STATE.done[k]){ box.classList.add("done"); fx.textContent="Finished ✓ — tap to undo"; fx.classList.add("done"); }
@@ -452,6 +451,21 @@ function updateConv(box,c){
 }
 function updateChips(box,c){ box.querySelectorAll(".chip").forEach(ch=>ch.classList.toggle("on",String(c.w)===String(ch.dataset.w))); }
 function refreshVerdict(box,sc,c){ const v=verdict(sc,c); const el=box.querySelector(".verdict"); el.className="verdict "+v.cls; el.textContent=v.txt; }
+// first empty set box within the prescribed count (-1 if all filled / none)
+function firstEmptySet(box,count){ if(!(count>0)) return -1; const ins=box.querySelectorAll('input[data-f^="s"]');
+  for(let i=0;i<count && i<ins.length;i++){ if(!ins[i].value) return i; } return -1; }
+// move the cursor to a set box and visually highlight it
+function focusSet(box,idx){ const ins=box.querySelectorAll('input[data-f^="s"]'); ins.forEach(i=>i.classList.remove("cue"));
+  const t=ins[idx]; if(t){ t.classList.add("cue"); try{ t.focus(); }catch(e){} } }
+// once all prescribed sets are logged, mark the exercise finished automatically
+function maybeAutoFinish(wk,di,li,box,count){
+  if(!(count>0)) return; const k=cellKey(wk,di,li); if(STATE.done[k]) return;
+  const ins=box.querySelectorAll('input[data-f^="s"]');
+  for(let i=0;i<count;i++){ if(!ins[i] || ins[i].value==="") return; }
+  ins.forEach(i=>i.classList.remove("cue"));
+  const fx=box.querySelector('[data-role="finishex"]');
+  if(fx) toggleExercise(wk,di,li,DAYS[di].name,DAYS[di].ex.length,fx,box);
+}
 // Most recent EARLIER week this same exercise was logged (skipping deload/test weeks).
 function findPrev(wk,di,li){
   const ex=DAYS[di].ex[li];
